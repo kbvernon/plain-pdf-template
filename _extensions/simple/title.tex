@@ -1,0 +1,124 @@
+%==================================================
+% BEGIN END-OF-PREAMBLE STUFF
+%==================================================
+
+% For patching commands like \subtitle
+\usepackage{etoolbox}
+
+% -----------------------
+% SIMPLE FORMATTING
+% -----------------------
+
+$if(watermark)$
+  \usepackage[color={[gray]{0.97}}]{draftwatermark}
+$endif$
+
+$if(linenumbers)$
+  \usepackage[left, displaymath, mathlines]{lineno}
+  \linenumbers
+$endif$
+
+% -----------------------
+% BibLaTeX
+% -----------------------
+$if(biblatex)$
+  $if(biblatex-chicago)$
+    \usepackage[
+      $if(biblio-style)$$biblio-style$,$endif$
+      $for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$
+    ]{biblatex-chicago}
+  $else$
+    \usepackage[
+      $if(biblio-style)$style=$biblio-style$,$endif$
+      $for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$
+    ]{biblatex}
+  $endif$
+
+  \setlength\bibitemsep{6pt}
+  \setlength\bibhang{\parindent} % Match document indentation
+  
+  % Fix biblatex's odd preference for using In: by default.
+  \renewbibmacro{in:}{%
+    \ifentrytype{article}{}{%
+      \printtext{\bibstring{}
+      \intitlepunct}
+    }
+  }
+  
+  \addbibresource{$bibliography$}
+  
+  % Start bibliography on new page
+  \pretocmd{\printbibliography}{\clearpage\singlespace}{}{}
+  
+  \AtBeginBibliography{\vspace*{10pt}} %increase space between title and first entry
+$endif$
+
+% This has to come at the end of the preamble, after any biblatex stuff because 
+% some biblatex styles (like APA) define their own \urlstyle{}
+\urlstyle{same} % don't use monospace font for urls
+
+% ----------------------- 
+% Title block elements
+% -----------------------
+
+% Keywords
+\providecommand{\keywords}[1]{\noindent\textbf{Keywords: }#1}
+
+% Target Journal
+\providecommand{\targets}[1]{\noindent\textbf{Target Journal(s): }#1}
+
+% Correspondence Email
+\providecommand{\correspond}[1]{
+  \noindent Corresponding author email: \textit{#1}
+}
+
+\usepackage{authblk}
+\renewcommand*{\Authsep}{, }
+\renewcommand*{\Authand}{ and }
+\renewcommand*{\Authands}{, and }
+\renewcommand\Affilfont{\small\itshape}
+\renewcommand\Authfont{\fontsize{12}{14.4}\selectfont}
+
+\makeatletter
+\renewcommand{\maketitle}{
+  \setlength{\parindent}{0pt}
+  \bgroup
+  \begin{flushleft}
+    \textbf{\Large{\@title}}
+    \vskip 10pt
+    \@author
+    \vskip 10pt
+    \textit{\small Draft compiled on \@date}
+  \end{flushleft}
+  \egroup
+}
+\makeatother
+
+\setlength{\affilsep}{10pt}
+
+$if(title)$
+  \title{$title$$if(subtitle)$:$endif$}
+$endif$
+
+$if(subtitle)$
+  \makeatletter
+  \providecommand{\subtitle}[1]{% add subtitle to \maketitle
+    \apptocmd{\@title}{ #1 \par}{}{}
+  }
+  \makeatother
+  \subtitle{$subtitle$}
+$endif$
+
+$for(by-author)$
+\author[$for(it.affiliations)$$it.number$$sep$,$endfor$]{$by-author.name.literal$}
+$endfor$
+
+$for(by-affiliation)$
+\affil[$it.number$]{$it.address$}
+$endfor$
+
+\date{$date$}
+
+%==================================================
+% END END-OF-PREAMBLE STUFF
+%==================================================

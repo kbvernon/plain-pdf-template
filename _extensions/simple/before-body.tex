@@ -1,0 +1,41 @@
+%==================================================
+% BEGIN TITLE SECTION
+%==================================================
+
+\begin{titlepage}
+
+% Don't include a newpage before \maketitle
+{\let\newpage\relax\maketitle}
+
+\begin{singlespace}
+
+$if(abstract)$
+  \noindent\textbf{Abstract} \par
+  \vskip 5pt
+  \noindent $abstract$ \par
+  \vskip 10pt
+$endif$
+
+$if(keywords)$
+  \keywords{$for(keywords)$$it$$sep$, $endfor$}
+  \vskip 10pt
+$endif$
+
+$if(target-journal)$
+  \targets{$for(target-journal)$$it$$sep$, $endfor$}
+  \vskip 10pt
+$endif$
+
+\vfill  % Fill the rest of the page with whitespace
+
+$if(corresponding_author)$
+  \correspond{\url{$corresponding_author$}}
+$endif$
+
+\end{singlespace}
+
+\end{titlepage}
+
+%==================================================
+% END TITLE SECTION
+%==================================================
